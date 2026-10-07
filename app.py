@@ -331,29 +331,126 @@ def render_step_bar(label: str, key: str, icon: str):
 
 # ─── Sidebar ────────────────────────────────────────────────────────────────────
 with st.sidebar:
-    st.markdown('<div class="hero-title" style="font-size:1.6rem">🎬 AI<br>Video</div>', unsafe_allow_html=True)
-    st.markdown('<div class="hero-sub">Meeting Intelligence</div>', unsafe_allow_html=True)
+
+    st.markdown(
+        '<div class="hero-title" style="font-size:1.6rem">🎬 AI<br>Video</div>',
+        unsafe_allow_html=True
+    )
+
+    st.markdown(
+        '<div class="hero-sub">Meeting Intelligence</div>',
+        unsafe_allow_html=True
+    )
+
     st.markdown("---")
 
-    st.markdown('<span class="badge badge-purple">Input</span>', unsafe_allow_html=True)
-    source = st.text_input("YouTube URL or File Path", placeholder="https://youtube.com/watch?v=... or /path/to/file.mp4")
 
-    language = st.selectbox("Language", ["english", "hinglish"], index=0)
+    st.markdown(
+        '<span class="badge badge-purple">Input</span>',
+        unsafe_allow_html=True
+    )
 
-    run_btn = st.button("⚡  Analyse", use_container_width=True)
+
+    source_type = st.radio(
+        "Select Input",
+        ["YouTube URL", "Upload File"],
+        horizontal=True
+    )
+
+
+    source = None
+
+
+    if source_type == "YouTube URL":
+
+        source = st.text_input(
+            "YouTube URL",
+            placeholder="https://youtube.com/watch?v=..."
+        )
+
+
+    else:
+
+        uploaded_file = st.file_uploader(
+            "Upload Video/Audio File",
+            type=[
+                "mp4",
+                "mov",
+                "mkv",
+                "avi",
+                "mp3",
+                "wav",
+                "m4a"
+            ]
+        )
+
+
+        if uploaded_file:
+
+            import os
+
+            upload_dir = "uploads"
+
+            os.makedirs(
+                upload_dir,
+                exist_ok=True
+            )
+
+
+            file_path = os.path.join(
+                upload_dir,
+                uploaded_file.name
+            )
+
+
+            with open(file_path, "wb") as f:
+                f.write(
+                    uploaded_file.getbuffer()
+                )
+
+
+            source = file_path
+
+
+
+    # KEEP THESE OUTSIDE IF/ELSE
+    language = st.selectbox(
+        "Language",
+        ["english", "hinglish"],
+        index=0
+    )
+
+
+    run_btn = st.button(
+        "⚡ Analyse",
+        use_container_width=True
+    )
+
 
     if st.session_state.pipeline_done:
+
         st.markdown("---")
-        st.markdown('<span class="badge badge-green">Pipeline Status</span>', unsafe_allow_html=True)
+
+        st.markdown(
+            '<span class="badge badge-green">Pipeline Status</span>',
+            unsafe_allow_html=True
+        )
+
+
         for step, icon, label in [
-            ("audio",      "🔊", "Audio Processing"),
+            ("audio", "🔊", "Audio Processing"),
             ("transcript", "📝", "Transcription"),
-            ("title",      "🏷️", "Title Generation"),
-            ("summary",    "📋", "Summarisation"),
-            ("extract",    "🔍", "Extraction"),
-            ("rag",        "🧠", "RAG Engine"),
+            ("title", "🏷️", "Title Generation"),
+            ("summary", "📋", "Summarisation"),
+            ("extract", "🔍", "Extraction"),
+            ("rag", "🧠", "RAG Engine"),
         ]:
-            render_step_bar(label, step, icon)
+
+            render_step_bar(
+                label,
+                step,
+                icon
+            )
 
 # ─── Main Area ──────────────────────────────────────────────────────────────────
 st.markdown('<div class="hero-title">AI Video Assistant</div>', unsafe_allow_html=True)
@@ -362,7 +459,7 @@ st.markdown("---")
 
 # ── Run Pipeline ────────────────────────────────────────────────────────────────
 if run_btn:
-    if not source.strip():
+    if not source:
         st.error("Please enter a YouTube URL or file path.")
     else:
         st.session_state.pipeline_done = False

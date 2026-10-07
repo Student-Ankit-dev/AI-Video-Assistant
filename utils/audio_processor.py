@@ -48,11 +48,21 @@ def download_youtube_audio(url: str) -> str:
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=True)
 
-        filename = (
-            ydl.prepare_filename(info)
-            .replace(".webm", ".wav")
-            .replace(".m4a", ".wav")
-        )
+        print("\n===== INFO =====")
+        print("prepare_filename:", ydl.prepare_filename(info))
+        print("requested_downloads:", info.get("requested_downloads"))
+        print("filepath:", info.get("filepath"))
+        print("================\n")
+ 
+        # filename = (
+        #     ydl.prepare_filename(info)
+        #     .replace(".webm", ".wav")
+        #     .replace(".m4a", ".wav")
+        # )
+
+        filename = os.path.splitext(ydl.prepare_filename(info))[0] + ".wav"
+
+        print("Returning:", filename)
 
     return filename
 
