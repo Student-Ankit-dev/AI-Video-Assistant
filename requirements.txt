@@ -29,7 +29,7 @@ chromadb
 openai-whisper
 
 # Audio & Video Processing
-yt-dlp
+yt-dlp>=2025.01.15
 ffmpeg-python
 pydub
 

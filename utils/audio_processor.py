@@ -14,17 +14,36 @@ def download_youtube_audio(url: str) -> str:
     )
 
     ydl_opts = {
-        "format": "bestaudio/best",
-        "outtmpl": output_path,
-        "postprocessors": [
-            {
-                "key": "FFmpegExtractAudio",
-                "preferredcodec": "wav",
-                "preferredquality": "192"
-            }
-        ],
-        "quiet": True,
-    }
+    "format": "bestaudio/best",
+    "outtmpl": output_path,
+
+    "noplaylist": True,
+
+    "extractor_args": {
+        "youtube": {
+            "player_client": ["android"]
+        }
+    },
+
+    "http_headers": {
+        "User-Agent": (
+            "Mozilla/5.0 "
+            "(Linux; Android 10; K) "
+            "AppleWebKit/537.36 "
+            "Chrome/131.0 Mobile Safari/537.36"
+        )
+    },
+
+    "postprocessors": [
+        {
+            "key": "FFmpegExtractAudio",
+            "preferredcodec": "wav",
+            "preferredquality": "192"
+        }
+    ],
+
+    "quiet": False,
+}
 
     with yt_dlp.YoutubeDL(ydl_opts) as ydl:
         info = ydl.extract_info(url, download=True)
