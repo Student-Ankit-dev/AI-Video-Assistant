@@ -8,7 +8,7 @@ from pydub import AudioSegment
 SARVAM_PIECE_SECONDS = 25
 
 
-WHISPER_MODEL = os.getenv("WHISPER_MODEL", "small")
+WHISPER_MODEL = os.getenv("WHISPER_MODEL", "tiny")
 
 
 SARVAM_API_KEY = os.getenv("SARVAM_API_KEY")
@@ -20,22 +20,32 @@ _model = None
 
 def load_model():
 
-    global _model  
+    global _model
 
-    if _model is None: 
+    if _model is None:
         print(f"Loading Whisper model: {WHISPER_MODEL} ...")
-        _model = whisper.load_model(WHISPER_MODEL) 
+
+        _model = whisper.load_model(
+            WHISPER_MODEL,
+            device="cpu"
+        )
+
         print("Whisper model loaded.")
-    return _model 
+
+    return _model
 
 
 def transcribe_chunk_whisper(chunk_path: str) -> str:
 
-    model = load_model()  
+    model = load_model()
 
-    result = model.transcribe(chunk_path, task="transcribe")  
-    return result["text"]  
+    result = model.transcribe(
+        chunk_path,
+        task="transcribe",
+        fp16=False
+    )
 
+    return result["text"]
 
 def _send_to_sarvam(piece_path: str) -> str:
     """Send one ≤30s WAV file to Sarvam and return the English transcript."""
