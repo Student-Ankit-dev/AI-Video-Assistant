@@ -1,0 +1,60 @@
+# ============================
+# AI Meeting Assistant
+# ============================
+
+# Web UI
+streamlit
+
+# LangChain
+langchain
+langchain-core
+langchain-community
+langchain-text-splitters
+
+# Mistral
+langchain-mistralai
+mistralai
+
+# HuggingFace Embeddings
+langchain-huggingface
+sentence-transformers
+transformers
+
+# Vector Database
+chromadb
+
+# Whisper (Local)
+openai-whisper
+
+# Audio & Video Processing
+yt-dlp
+ffmpeg-python
+pydub
+
+# PDF Export
+fpdf2
+
+# Environment Variables
+python-dotenv
+
+# Token Counting
+tiktoken
+
+# Numerical Libraries
+numpy
+pandas
+
+# HTTP Requests
+requests
+
+# Progress Bars
+tqdm
+
+# Utilities
+pydantic
+
+# Optional OCR (if later needed)
+pillow
+
+# Optional GPU acceleration
+torch
